@@ -1,0 +1,17 @@
+{
+  "name": "easy-url",
+  "version": "0.1.0",
+  "description": "url shortener",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "process": "^0.11.10",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

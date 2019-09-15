@@ -1,0 +1,14 @@
+{:source-paths ["src"]
+ :deps {:aliases [:cljs]}
+ :nrepl {:port 6699}
+
+ :builds {:app {:target :browser
+                :output-dir "resources/public/js"
+                :asset-path "js"
+                :modules {:main {:entries [tider.app.core]}}
+                ;; #_:devtools #_{:after-load tider.app.core/start
+                ;;            :http-root "public"
+                ;;                :http-port 8020}
+                :devtools {:after-load tider.app.core/start
+                           :http-root "resources/public"
+                           :watch-dir "resources/public"}}}}

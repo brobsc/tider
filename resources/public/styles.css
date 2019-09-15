@@ -1,0 +1,8 @@
+body {
+  display: grid;
+  width: 90%;
+  max-width: 850px;
+  justify-content: center;
+  font-family: 'Helvetica Neue', 'Verdana', sans-serif;
+  font-size: 0.8em;
+}
