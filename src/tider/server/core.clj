@@ -4,10 +4,12 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.util.response :refer [not-found]]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [dotenv :refer [env]])
   (:gen-class))
 
-(def port 3000)
+(def port (or (Integer/parseInt (env :APP_PORT))
+              3000))
 (defonce server (atom {}))
 
 (defmulti handler :uri)
@@ -24,7 +26,7 @@
 
 (defn run-server [handler-fn]
   (reset! server (run-jetty handler-fn {:port port :join? false}))
-  (println (str "Started server on http://localhost:" port)))
+  (println (format "Started server on http://localhost:%d" port)))
 
 (defn -main []
   (-> handler

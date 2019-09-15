@@ -1,8 +1,12 @@
 (ns tider.repl
   (:require [reply.main :as reply]
-            [tider.server.core]))
+            [tider.server.core]
+            [dotenv :refer [env]]))
+
+(def port (or (env :SERVER_REPL_PORT)
+              "6688"))
 
 (defn -main []
-  (println "Connecting to REPL at port 6688")
-  (reply/launch-nrepl {:attach "6688"})
+  (println (format "Connecting to Server REPL at port %s" port))
+  (reply/launch-nrepl {:attach port})
   (shutdown-agents))
