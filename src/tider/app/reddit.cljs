@@ -29,7 +29,6 @@
 (defn subr
   "Loads a subrredit `s` and executes `f` (callback) at the formatted response."
   [s f]
-  (js/console.log s)
   (req (subr-url s) [:data :children] f))
 
 (defn post
@@ -39,9 +38,7 @@
                       (mapv :children)
                       (mapv #(mapv :data %))
                       (zipmap [:self :comments])
-                      ((fn [map]
-                         (assoc map :self (get-in map [:self 0]))))
+                      ((fn [post]
+                         (assoc post :self (get-in post [:self 0]))))
                       f))]
-    (js/console.log s)
     (req (perma-url s) [] new-fn)))
-

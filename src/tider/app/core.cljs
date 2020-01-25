@@ -4,7 +4,8 @@
             [reitit.frontend :as reitit]
             [clerk.core :as clerk]
             [accountant.core :as accountant]
-            [tider.app.reddit :as w]))
+            [tider.app.reddit :as w]
+            [goog.string]))
 
 (defonce proggit (r/atom {}))
 
@@ -59,8 +60,15 @@
         target (.. js/window -location -pathname)
         _ (w/post target #(reset! page %))]
     (fn []
-      [:div
-       [:h1 (get-in @page [:self :title])]])))
+      [:div.post-page
+       (let [self (get @page :self)]
+         [:div.self
+           [:h1.title (:title self)]
+           (when (seq (:selftext self))
+              [:div.content
+               {:dangerouslySetInnerHTML
+                  #js {:__html (goog.string/unescapeEntities
+                                 (:selftext_html self))}}])])])))
 
 (defn page-for [route]
   (case route

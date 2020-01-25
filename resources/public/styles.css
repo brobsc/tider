@@ -22,7 +22,6 @@ html, body {
 
 #content {
   width: 90%;
-  min-width: 90%;
   max-width: 850px;
   display: grid;
   justify-self: center;
@@ -32,6 +31,7 @@ html, body {
   justify-content: center;
   display: grid;
   grid-template-columns: 100%;
+  grid-template-rows: 2rem 1fr 2rem;
 }
 
 .posts {
@@ -92,3 +92,21 @@ h1 {
   border-right: 2px solid #ddd;
 }
 
+.post-page .self {
+  display: grid;
+  align-content: start;
+  border-bottom: 1px solid #ddd;
+}
+
+.post-page .self .title {
+  font-size: 1rem;
+}
+
+.post-page .self .md {
+  font-size: 0.8rem;
+  text-align: justify;
+}
+
+.md p {
+  margin: 0.4rem 0;
+}
