@@ -57,7 +57,7 @@ h1 {
   "score info"
   "score self"
   "score footer";
-  grid-template-columns: 7ch 1fr;
+  grid-template-columns: 4ch 1fr;
   grid-auto-rows: min-content;
   grid-column-gap: 0.6em;
   height: max-content;

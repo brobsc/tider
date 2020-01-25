@@ -5,7 +5,8 @@
             [clerk.core :as clerk]
             [accountant.core :as accountant]
             [tider.app.reddit :as w]
-            [tider.app.utils :refer [unescape from-now]]))
+            [tider.app.utils :refer [unescape from-now
+                                     short-score]]))
 
 ;; Routing managament taken (and then adapted) from the Reagent Template at https://github.com/reagent-project/reagent-template/blob/1fa2ff20ef149ba2006ab52d7e23b7c684cb727d/resources/leiningen/new/reagent/src/cljs/reagent/core.cljs
 
@@ -26,7 +27,7 @@
    [post-card post false])
   ([post self?]
    [:div.post
-    [:div.score (:score post)]
+    [:div.score (short-score (:score post))]
     [:div
      [:a.title {:href (:url post)} (unescape (:title post))]
      [:a.domain.muted-link {:href (str "http://" (:domain post))} (str "(" (:domain post) ")")]]
