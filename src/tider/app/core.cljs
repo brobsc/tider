@@ -5,9 +5,16 @@
             [clerk.core :as clerk]
             [accountant.core :as accountant]
             [tider.app.reddit :as w]
-            [goog.string]))
+            [goog.string]
+            ["moment" :as moment]))
 
 (defonce proggit (r/atom {}))
+
+(def unescape
+  (fnil goog.string/unescapeEntities ""))
+
+(defn from-now [i]
+  (.fromNow (moment/unix i)))
 
 ;; Routing managament taken (and then adapted) from the Reagent Template at https://github.com/reagent-project/reagent-template/blob/1fa2ff20ef149ba2006ab52d7e23b7c684cb727d/resources/leiningen/new/reagent/src/cljs/reagent/core.cljs
 
@@ -27,22 +34,17 @@
   [:div.post
    [:div.score (:score post)]
    [:div
-    [:a.title {:href (:url post)} (:title post)]
+    [:a.title {:href (:url post)} (unescape (:title post))]
     [:a.domain.muted-link {:href (str "http://" (:domain post))} (str "(" (:domain post) ")")]]
    [:div.gap-bar
     [:a.user.muted-link {:href ""} (:author post)]
+    [:span.muted-link (from-now (:created post))]
     [:a.comments.muted-link {:href (:permalink post)}
      (str (:num_comments post)
       " comments")]]])
 
-(defn posts []
-  (let [sub (r/atom nil)
-        _ (w/subr "programming" (partial reset! sub))]
-    (fn []
-       [:div.posts
-        (for [post @sub]
-          ^{:key (:permalink post)}
-          [post-card post])])))
+(defn home []
+  [:p "choose a sub"])
 
 (defn subreddit []
   (let [sub (r/atom nil)
@@ -50,10 +52,12 @@
                    (get-in [:route-params :subreddit]))
         _ (w/subr target (partial reset! sub))]
     (fn []
-       [:div.posts
-        (for [post @sub]
-          ^{:key (:permalink post)}
-          [post-card post])])))
+      [:div.subreddit
+        [:h1.title "/r/" target]
+        [:div.posts
+         (for [post @sub]
+           ^{:key (:permalink post)}
+           [post-card post])]])))
 
 (defn comments []
   (let [page (r/atom {})
@@ -63,16 +67,16 @@
       [:div.post-page
        (let [self (get @page :self)]
          [:div.self
-           [:h1.title (:title self)]
+           [:h1.title (unescape (:title self))]
            (when (seq (:selftext self))
               [:div.content
                {:dangerouslySetInnerHTML
-                  #js {:__html (goog.string/unescapeEntities
+                  #js {:__html (unescape
                                  (:selftext_html self))}}])])])))
 
 (defn page-for [route]
   (case route
-    :home #'posts
+    :home #'home
     :subreddit #'subreddit
     :comments #'comments))
 
