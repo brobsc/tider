@@ -40,7 +40,7 @@
                           (:selftext_html post))}}]))]
     [:div.post-footer.gap-bar
      [:a.user.muted-link {:href ""} (:author post)]
-     [:span.muted-link (from-now (:created post))]
+     [:span.muted-link (from-now (:created_utc post))]
      [:a.comments.muted-link {:href (:permalink post)}
       (str (:num_comments post)
        " comments")]]]))
@@ -61,13 +61,35 @@
            ^{:key (:permalink post)}
            [post-card post])]])))
 
+(defn comment-card
+  ([comm]
+   [comment-card comm 0])
+  ([comm level]
+   [:div.comment-card
+    [:div.score
+     [:p (short-score (:ups comm))]
+     [:div.dotted-border]]
+    [:div.comment-header.gap-bar
+     [:a.user.muted-link {:href ""} (:author comm)]
+     [:span.muted-link (from-now (:created_utc comm))]]
+    [:div.selftext
+     {:dangerouslySetInnerHTML
+      #js {:__html (unescape
+                     (:body_html comm))}}]]))
+
+
 (defn comments []
   (let [page (r/atom nil)
         target (.. js/window -location -pathname)
         _ (w/post target #(reset! page %))]
     (fn []
       (when @page
-        [post-card (:self @page) true]))))
+        [:div
+         [post-card (:self @page) true]
+         (for [comm (:comments @page)]
+           ^{:key (:id comm)}
+           [comment-card comm])]))))
+
 
 (defn page-for [route]
   (case route

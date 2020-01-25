@@ -63,7 +63,7 @@ h1 {
   height: max-content;
 }
 
-.post .score {
+.score {
   display: grid;
   grid-area: score;
   align-content: center;
@@ -80,11 +80,11 @@ h1 {
   font-weight: 500;
 }
 
-.post .user:before {
+.user:before {
   content: "u/"
 }
 
-.post .muted-link {
+.muted-link {
   font-size: 0.6rem;
   font-weight: normal;
   margin: 0.1rem;
@@ -114,4 +114,59 @@ h1 {
 
 .md p {
   margin: 0.4rem 0;
+}
+
+.md blockquote {
+  color: #888;
+  margin: 0.2rem;
+  border-left: 1px dotted #ddd;
+  padding: 0.2rem 0.4rem;
+  padding-right: 0;
+}
+
+.comment-card {
+  display: grid;
+  padding: 0.2rem 0;
+  grid-template-areas:
+  "score header"
+  "score content"
+  "footer footer";
+  grid-template-columns: 4ch 1fr;
+  grid-auto-rows: min-content;
+  height: max-content;
+}
+
+.comment-card:after {
+  grid-area: footer;
+  display: block;
+  content: "";
+  border-bottom: 1px solid #888;
+  margin-left: 1.4em;
+}
+
+.comment-card .score {
+  max-height: 100%;
+  width: 100%;
+  display: grid;
+  font-size: 0.8rem;
+  margin-bottom: 0.4em;
+  grid-template-rows: 2rem 1fr;
+  grid-template-columns: 1fr;
+}
+
+.comment-card .score p {
+  max-height: 2rem;
+  align-self: start;
+  justify-self: center;
+}
+
+.comment-card .score .dotted-border {
+  content: "";
+  height: 100%;
+  justify-self: center;
+  border-left: 1px dotted #888;
+}
+
+.comment-header {
+  grid-area: header;
 }
