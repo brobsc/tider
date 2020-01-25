@@ -51,13 +51,16 @@ h1 {
 
 .post {
   display: grid;
-  margin: 0.2rem;
+  padding: 0.2rem 0;
   border-bottom: 1px solid #ddd;
   grid-template-areas:
   "score info"
-  "score others";
+  "score self"
+  "score footer";
   grid-template-columns: 7ch 1fr;
-  grid-column-gap: 0.6rem;
+  grid-auto-rows: min-content;
+  grid-column-gap: 0.6em;
+  height: max-content;
 }
 
 .post .score {
@@ -67,6 +70,7 @@ h1 {
   justify-content: end;
   font-size: 0.8rem;
   font-weight: bold;
+  max-height: 2em;
 }
 
 .post .title {
@@ -94,22 +98,16 @@ h1 {
   color: #888;
 }
 
+.post-footer {
+  grid-area: footer;
+}
+
 .gap-bar > *:not(:last-child) {
   padding-right: 0.2rem;
   border-right: 2px solid #ddd;
 }
 
-.post-page .self {
-  display: grid;
-  align-content: start;
-  border-bottom: 1px solid #ddd;
-}
-
-.post-page .self .title {
-  font-size: 1rem;
-}
-
-.post-page .self .md {
+.selftext {
   font-size: 0.8rem;
   text-align: justify;
 }

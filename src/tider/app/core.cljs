@@ -21,18 +21,28 @@
     (:path (reitit/match-by-name router route params))
     (:path (reitit/match-by-name router route))))
 
-(defn post-card [post]
-  [:div.post
-   [:div.score (:score post)]
-   [:div
-    [:a.title {:href (:url post)} (unescape (:title post))]
-    [:a.domain.muted-link {:href (str "http://" (:domain post))} (str "(" (:domain post) ")")]]
-   [:div.gap-bar
-    [:a.user.muted-link {:href ""} (:author post)]
-    [:span.muted-link (from-now (:created post))]
-    [:a.comments.muted-link {:href (:permalink post)}
-     (str (:num_comments post)
-      " comments")]]])
+(defn post-card
+  ([post]
+   [post-card post false])
+  ([post self?]
+   [:div.post
+    [:div.score (:score post)]
+    [:div
+     [:a.title {:href (:url post)} (unescape (:title post))]
+     [:a.domain.muted-link {:href (str "http://" (:domain post))} (str "(" (:domain post) ")")]]
+    [:div
+     (when self?
+       (when (seq (:selftext post))
+         [:div.selftext
+          {:dangerouslySetInnerHTML
+           #js {:__html (unescape
+                          (:selftext_html post))}}]))]
+    [:div.post-footer.gap-bar
+     [:a.user.muted-link {:href ""} (:author post)]
+     [:span.muted-link (from-now (:created post))]
+     [:a.comments.muted-link {:href (:permalink post)}
+      (str (:num_comments post)
+       " comments")]]]))
 
 (defn home []
   [:p "choose a sub"])
@@ -51,19 +61,12 @@
            [post-card post])]])))
 
 (defn comments []
-  (let [page (r/atom {})
+  (let [page (r/atom nil)
         target (.. js/window -location -pathname)
         _ (w/post target #(reset! page %))]
     (fn []
-      [:div.post-page
-       (let [self (get @page :self)]
-         [:div.self
-           [:h1.title (unescape (:title self))]
-           (when (seq (:selftext self))
-              [:div.content
-               {:dangerouslySetInnerHTML
-                  #js {:__html (unescape
-                                 (:selftext_html self))}}])])])))
+      (when @page
+        [post-card (:self @page) true]))))
 
 (defn page-for [route]
   (case route
