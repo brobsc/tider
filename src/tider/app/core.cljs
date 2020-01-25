@@ -65,17 +65,22 @@
   ([comm]
    [comment-card comm 0])
   ([comm level]
-   [:div.comment-card
-    [:div.score
-     [:p (short-score (:ups comm))]
-     [:div.dotted-border]]
-    [:div.comment-header.gap-bar
-     [:a.user.muted-link {:href ""} (:author comm)]
-     [:span.muted-link (from-now (:created_utc comm))]]
-    [:div.selftext
-     {:dangerouslySetInnerHTML
-      #js {:__html (unescape
-                     (:body_html comm))}}]]))
+   [:div
+    [:div.comment-card
+     [:div.score
+      [:p (short-score (:ups comm))]
+      [:div.dotted-border]]
+     [:div.comment-header.gap-bar
+      [:a.user.muted-link {:href ""} (:author comm)]
+      [:span.muted-link (from-now (:created_utc comm))]]
+     [:div.selftext
+      {:dangerouslySetInnerHTML
+       #js {:__html (unescape
+                      (:body_html comm))}}]
+     [:div.replies
+      (for [reply (->> (get-in (:replies comm) [:data :children])
+                       (mapv :data))]
+        [comment-card reply (inc level)])]]]))
 
 
 (defn comments []

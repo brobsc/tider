@@ -130,8 +130,9 @@ h1 {
   grid-template-areas:
   "score header"
   "score content"
+  "score replies"
   "footer footer";
-  grid-template-columns: 4ch 1fr;
+  grid-template-columns: 2ch 1fr;
   grid-auto-rows: min-content;
   height: max-content;
 }
@@ -140,7 +141,7 @@ h1 {
   grid-area: footer;
   display: block;
   content: "";
-  border-bottom: 1px solid #888;
+  border-bottom: 1px solid #ddd;
   margin-left: 1.4em;
 }
 
@@ -155,6 +156,7 @@ h1 {
 }
 
 .comment-card .score p {
+  font-size: 0.6rem;
   max-height: 2rem;
   align-self: start;
   justify-self: center;
