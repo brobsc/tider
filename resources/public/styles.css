@@ -124,6 +124,14 @@ h1 {
   padding-right: 0;
 }
 
+.md pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.6rem;
+  background: #ddd;
+  padding: 0.1rem;
+}
+
 .comment-card {
   display: grid;
   padding: 0.2rem 0;
@@ -137,7 +145,7 @@ h1 {
   height: max-content;
 }
 
-.comment-card:after {
+.comment-card:not(:last-child):after {
   grid-area: footer;
   display: block;
   content: "";
@@ -172,3 +180,4 @@ h1 {
 .comment-header {
   grid-area: header;
 }
+
