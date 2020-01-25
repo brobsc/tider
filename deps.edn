@@ -18,7 +18,11 @@
            :repl {:main-opts ["-m" "tider.repl"]}
 
            :cljs {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.520"}
-                               reagent {:mvn/version "0.8.1"}
+                               reagent {:mvn/version "0.9.0-rc3"}
+                               reagent-utils {:mvn/version "0.3.3"}
+                               metosin/reitit {:mvn/version "0.3.10"}
+                               pez/clerk {:mvn/version "1.0.0"}
+                               venantius/accountant {:mvn/version "0.2.5"}
                                cljs-http {:mvn/version "0.1.46"}}}
 
            :test {:extra-paths ["test"]

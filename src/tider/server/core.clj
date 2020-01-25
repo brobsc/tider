@@ -14,15 +14,11 @@
 
 (defmulti handler :uri)
 
-(defmethod handler "/"
-  [request]
+(defmethod handler :default
+  [_]
   {:status 200
    :headers {"Content-Type" "text/html"}
    :body (-> "public/index.html" io/resource slurp)})
-
-(defmethod handler :default
-  [request]
-  (not-found "Page not found :("))
 
 (defn run-server [handler-fn]
   (reset! server (run-jetty handler-fn {:port port :join? false}))
