@@ -5,16 +5,7 @@
             [clerk.core :as clerk]
             [accountant.core :as accountant]
             [tider.app.reddit :as w]
-            [goog.string]
-            ["moment" :as moment]))
-
-(defonce proggit (r/atom {}))
-
-(def unescape
-  (fnil goog.string/unescapeEntities ""))
-
-(defn from-now [i]
-  (.fromNow (moment/unix i)))
+            [tider.app.utils :refer [unescape from-now]]))
 
 ;; Routing managament taken (and then adapted) from the Reagent Template at https://github.com/reagent-project/reagent-template/blob/1fa2ff20ef149ba2006ab52d7e23b7c684cb727d/resources/leiningen/new/reagent/src/cljs/reagent/core.cljs
 
@@ -99,7 +90,10 @@
   (accountant/configure-navigation!
     {:nav-handler
      (fn [path]
-       (let [match (reitit/match-by-path router path)
+       (when (not= (last (seq path)) \/)
+         (accountant/navigate! (str path "/")))
+       (let [path (if (= (last (seq path)) \/) path (str path "/"))
+             match (reitit/match-by-path router path)
              current-page (:name (:data match))
              route-params (:path-params match)]
          (r/after-render clerk/after-render!)

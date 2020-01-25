@@ -25,6 +25,8 @@ html, body {
   max-width: 850px;
   display: grid;
   justify-self: center;
+  overflow-x: hidden;
+  word-break: break-word;
 }
 
 .container {
@@ -41,8 +43,6 @@ html, body {
 
 .posts {
   display: grid;
-  overflow-x: hidden;
-  word-break: break-word;
 }
 
 h1 {
