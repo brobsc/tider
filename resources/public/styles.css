@@ -35,9 +35,11 @@ html, body {
   grid-template-rows: 2rem 1fr 2rem;
 }
 
+.subreddit.title,
 .subreddit .title {
   font-size: 1rem;
   margin: 0.2rem 0;
+  text-decoration: none;
 }
 
 .posts {
@@ -117,7 +119,8 @@ h1 {
 }
 
 .md blockquote {
-  color: #888;
+  color: #666;
+  font-style: italic;
   margin: 0.2rem;
   border-left: 1px dotted #ddd;
   padding: 0.2rem 0.4rem;
@@ -182,15 +185,8 @@ h1 {
 }
 
 footer {
+  margin: 1.75rem 0;
   text-align: center;
-}
-
-footer:before {
-  display: block;
-  content: " ";
-  background: #eee;
-  height: 0.1rem;
-  margin: 0.8rem;
 }
 
 .subtle-link {
@@ -202,4 +198,9 @@ footer:before {
 .comm-score {
   font-weight: bold;
   font-size: 0.6rem;
+}
+
+.show-more {
+  font-weight: bold;
+  padding-left: 0.8rem;
 }

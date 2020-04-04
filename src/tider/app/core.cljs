@@ -21,11 +21,6 @@
       ["/:subreddit/" :subreddit]
       ["/:subreddit/comments/:id/:title/" :comments]]]))
 
-(defn path-for [route & [params]]
-  (if params
-    (:path (reitit/match-by-name router route params))
-    (:path (reitit/match-by-name router route))))
-
 (defn post-card
   ([post]
    [post-card post false])
@@ -50,7 +45,7 @@
        " comments")]]]))
 
 (defn home []
-  [:p "choose a sub"])
+  [:p "watch this space! For now, just replace a reddit.com url with betider.com"])
 
 (defn subreddit []
   (let [sub (r/atom nil)
@@ -90,9 +85,9 @@
               (if (and (not= 0 level)
                        (zero? (mod level MAX_LEVEL))
                        (not @show-more))
-                [:a.subtle-link
+                [:a.subtle-link.show-more
                  {:on-click #(swap! show-more not)}
-                 (str "show more")]
+                 (str "show " (count replies) " more replies")]
                 [:div.replies
                  (for [reply replies]
                    ^{:key (:id reply)}
@@ -109,25 +104,27 @@
         _ (w/post target #(reset! page %))
         limit (r/atom 1)]
     (fn []
-      (when @page
-        [:div
-         [post-card (:self @page) true]
-         (let [comments-partitions
-               (take @limit
-                     (partition
-                       COMMENT_PARTITION
-                       COMMENT_PARTITION [] (:comments @page)))]
-           [:div
-            (for [part comments-partitions]
-              (comment-listing part))
-            (let [comment-count (count (:comments @page))
-                  remaining (- comment-count (* COMMENT_PARTITION @limit))]
-              (when (pos? remaining)
-                [:a.subtle-link
-                 {:on-click #(swap! limit inc)}
-                 (str "load more ("
-                      remaining
-                      " remaining)")]))])]))))
+     (when @page
+       (let [sub (str "/" (get-in @page [:self :subreddit_name_prefixed]))]
+         [:div
+          [:a.subreddit.title {:href sub} sub]
+          [post-card (:self @page) true]
+          (let [comments-partitions
+                (take @limit
+                      (partition
+                        COMMENT_PARTITION
+                        COMMENT_PARTITION [] (:comments @page)))]
+            [:div
+             (for [part comments-partitions]
+               (comment-listing part))
+             (let [comment-count (count (:comments @page))
+                   remaining (- comment-count (* COMMENT_PARTITION @limit))]
+               (when (pos? remaining)
+                 [:a.subtle-link
+                  {:on-click #(swap! limit inc)}
+                  (str "load more ("
+                       remaining
+                       " remaining)")]))])])))))
 
 (defn page-for [route]
   (case route
