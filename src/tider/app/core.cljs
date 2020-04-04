@@ -12,6 +12,7 @@
 ;; Routing managament taken (and then adapted) from the Reagent Template at https://github.com/reagent-project/reagent-template/blob/1fa2ff20ef149ba2006ab52d7e23b7c684cb727d/resources/leiningen/new/reagent/src/cljs/reagent/core.cljs
 
 (def COMMENT_PARTITION 20)
+(def MAX_LEVEL 2)
 
 (def router
   (reitit/router
@@ -68,22 +69,32 @@
   ([comm]
    [comment-card comm 0])
   ([comm level]
-   [:div.comment-card
-    [:div.score
-     [:p (short-score (:ups comm))]
-     [:div.dotted-border]]
-    [:div.comment-header.gap-bar
-     [:a.user.muted-link {:href ""} (:author comm)]
-     [:span.muted-link (from-now (:created_utc comm))]]
-    [:div.selftext
-     {:dangerouslySetInnerHTML
-      #js {:__html (unescape
-                     (:body_html comm))}}]
-    [:div.replies
-     (for [reply (->> (get-in (:replies comm) [:data :children])
-                      (mapv :data))]
-       ^{:key (:id reply)}
-       [comment-card reply (inc level)])]]))
+   (let [show-more (r/atom false)]
+    (fn []
+     [:div.comment-card
+      [:div.score
+       [:p (short-score (:ups comm))]
+       [:div.dotted-border]]
+      [:div.comment-header.gap-bar
+       [:a.user.muted-link {:href ""} (:author comm)]
+       [:span.muted-link (from-now (:created_utc comm))]]
+      [:div.selftext
+       {:dangerouslySetInnerHTML
+        #js {:__html (unescape
+                       (:body_html comm))}}]
+      (let [replies (->> (get-in (:replies comm) [:data :children])
+                         (mapv :data))]
+        (when (seq replies)
+          (if (and (not= 0 level)
+                   (zero? (mod level MAX_LEVEL))
+                   (not @show-more))
+           [:a.subtle-link
+            {:on-click #(swap! show-more not)}
+            (str "show more")]
+           [:div.replies
+            (for [reply replies]
+              ^{:key (:id reply)}
+              [comment-card reply (inc level)])])))]))))
 
 (defn comment-listing [comments]
   (for [comm comments]
@@ -99,7 +110,7 @@
       (when @page
         [:div
          [post-card (:self @page) true]
-         (let [comments-partitions 
+         (let [comments-partitions
                (take @limit
                      (partition
                        COMMENT_PARTITION
