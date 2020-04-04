@@ -11,6 +11,8 @@
 
 ;; Routing managament taken (and then adapted) from the Reagent Template at https://github.com/reagent-project/reagent-template/blob/1fa2ff20ef149ba2006ab52d7e23b7c684cb727d/resources/leiningen/new/reagent/src/cljs/reagent/core.cljs
 
+(def COMMENT_PARTITION 20)
+
 (def router
   (reitit/router
    [["/" :home]
@@ -81,21 +83,38 @@
      (for [reply (->> (get-in (:replies comm) [:data :children])
                       (mapv :data))]
        ^{:key (:id reply)}
-       [comment-card  reply (inc level)])]]))
+       [comment-card reply (inc level)])]]))
 
+(defn comment-listing [comments]
+  (for [comm comments]
+    ^{:key (:id comm)}
+    [comment-card comm]))
 
 (defn comments []
   (let [page (r/atom nil)
         target (.. js/window -location -pathname)
-        _ (w/post target #(reset! page %))]
+        _ (w/post target #(reset! page %))
+        limit (r/atom 1)]
     (fn []
       (when @page
         [:div
          [post-card (:self @page) true]
-         (for [comm (:comments @page)]
-          ^{:key (:id comm)}
-          [comment-card comm])]))))
-
+         (let [comments-partitions 
+               (take @limit
+                     (partition
+                       COMMENT_PARTITION
+                       COMMENT_PARTITION [] (:comments @page)))]
+           [:div
+            (for [part comments-partitions]
+              (comment-listing part))
+            (let [comment-count (count (:comments @page))
+                  remaining (- comment-count (* COMMENT_PARTITION @limit))]
+              (when (pos? remaining)
+                [:a.subtle-link
+                 {:on-click #(swap! limit inc)}
+                 (str "load more ("
+                      remaining
+                      " remaining)")]))])]))))
 
 (defn page-for [route]
   (case route
@@ -112,7 +131,7 @@
         [:span.subtitle "  a tidier reddit experience"]]
        [page]
        [:footer
-        [:a
+        [:a.subtle-link
          {:on-click #(js/window.scrollTo 0 0)}
          "jump to top"]]])))
 
