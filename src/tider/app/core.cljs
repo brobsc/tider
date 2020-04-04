@@ -70,31 +70,33 @@
    [comment-card comm 0])
   ([comm level]
    (let [show-more (r/atom false)]
-    (fn []
-     [:div.comment-card
-      [:div.score
-       [:p (short-score (:ups comm))]
-       [:div.dotted-border]]
-      [:div.comment-header.gap-bar
-       [:a.user.muted-link {:href ""} (:author comm)]
-       [:span.muted-link (from-now (:created_utc comm))]]
-      [:div.selftext
-       {:dangerouslySetInnerHTML
-        #js {:__html (unescape
-                       (:body_html comm))}}]
-      (let [replies (->> (get-in (:replies comm) [:data :children])
-                         (mapv :data))]
-        (when (seq replies)
-          (if (and (not= 0 level)
-                   (zero? (mod level MAX_LEVEL))
-                   (not @show-more))
-           [:a.subtle-link
-            {:on-click #(swap! show-more not)}
-            (str "show more")]
-           [:div.replies
-            (for [reply replies]
-              ^{:key (:id reply)}
-              [comment-card reply (inc level)])])))]))))
+     (fn []
+       (when (:author comm)
+         [:div.comment-card
+          [:div.score
+           [:p "·"]
+           [:div.dotted-border]]
+          [:div.comment-header.gap-bar
+           [:span.comm-score (short-score (:ups comm))]
+           [:a.user.muted-link {:href ""} (:author comm)]
+           [:span.muted-link (from-now (:created_utc comm))]]
+          [:div.selftext
+           {:dangerouslySetInnerHTML
+            #js {:__html (unescape
+                           (:body_html comm))}}]
+          (let [replies (->> (get-in (:replies comm) [:data :children])
+                             (mapv :data))]
+            (when (seq replies)
+              (if (and (not= 0 level)
+                       (zero? (mod level MAX_LEVEL))
+                       (not @show-more))
+                [:a.subtle-link
+                 {:on-click #(swap! show-more not)}
+                 (str "show more")]
+                [:div.replies
+                 (for [reply replies]
+                   ^{:key (:id reply)}
+                   [comment-card reply (inc level)])])))])))))
 
 (defn comment-listing [comments]
   (for [comm comments]

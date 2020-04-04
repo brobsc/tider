@@ -102,12 +102,13 @@ h1 {
 }
 
 .gap-bar > *:not(:last-child) {
-  padding-right: 0.2rem;
-  border-right: 2px solid #ddd;
+  padding: 0 0.2rem;
+  border-right: 1px solid #ddd;
 }
 
 .selftext {
   font-size: 0.8rem;
+  padding-left: 0.2rem;
   text-align: justify;
 }
 
@@ -126,9 +127,9 @@ h1 {
 .md pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   background: #ddd;
-  padding: 0.1rem;
+  padding: 0.4rem;
 }
 
 .comment-card {
@@ -139,7 +140,7 @@ h1 {
   "score content"
   "score replies"
   "footer footer";
-  grid-template-columns: 2ch 1fr;
+  grid-template-columns: 1ch auto;
   grid-auto-rows: min-content;
   height: max-content;
 }
@@ -195,5 +196,10 @@ footer:before {
 .subtle-link {
   cursor: pointer;
   color: #888;
+  font-size: 0.6rem;
+}
+
+.comm-score {
+  font-weight: bold;
   font-size: 0.6rem;
 }
