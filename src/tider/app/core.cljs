@@ -1,5 +1,6 @@
 (ns tider.app.core
   (:require [reagent.core :as r]
+            [reagent.dom :refer [render]]
             [reagent.session :as session]
             [reitit.frontend :as reitit]
             [clerk.core :as clerk]
@@ -79,7 +80,8 @@
     [:div.replies
      (for [reply (->> (get-in (:replies comm) [:data :children])
                       (mapv :data))]
-       [comment-card reply (inc level)])]]))
+       ^{:key (:id reply)}
+       [comment-card  reply (inc level)])]]))
 
 
 (defn comments []
@@ -91,8 +93,8 @@
         [:div
          [post-card (:self @page) true]
          (for [comm (:comments @page)]
-           ^{:key (:id comm)}
-           [comment-card comm])]))))
+          ^{:key (:id comm)}
+          [comment-card comm])]))))
 
 
 (defn page-for [route]
@@ -109,10 +111,14 @@
         [:span.title "tider for reddit"]
         [:span.subtitle "  a tidier reddit experience"]]
        [page]
-       [:footer ""]])))
+       [:footer
+        [:a
+         {:on-click #(js/window.scrollTo 0 0)}
+         "jump to top"]]])))
+
 
 (defn start []
-  (r/render [app]
+  (render [app]
     (.getElementById js/document "content")))
 
 (defn ^:export init []
