@@ -2,6 +2,15 @@
   (:require [goog.string]
             ["moment" :as moment]))
 
+(defn jsonp [uri callback _]
+  (let [script (js/document.createElement "script")
+        _ (set! js/window.jsonpCb callback)
+        _ (set! script.src (str (reduce str (drop 5 (seq uri)))
+                            "?jsonp=jsonpCb"))
+        head (js/document.querySelector "head")
+        _2 (.appendChild head script)]
+   nil))
+
 (def unescape
   (fnil goog.string/unescapeEntities ""))
 

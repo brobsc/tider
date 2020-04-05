@@ -1,5 +1,4 @@
-{:source-paths ["src"]
- :deps {:aliases [:cljs]}
+{:deps {:aliases [:cljs]}
  :nrepl {:port 6699}
 
  :builds {:app {:target :browser
