@@ -24,5 +24,7 @@
                                venantius/accountant {:mvn/version "0.2.5"}
                                cljs-http {:mvn/version "0.1.46"}}}
 
+           :serve {:main-opts ["-m" "tider.server.core"]}
+
            :test {:extra-paths ["test"]
                   :extra-deps {org.clojure/test.check {:mvn/version "RELEASE"}}}}}
