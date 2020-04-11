@@ -204,3 +204,11 @@ footer {
   font-weight: bold;
   padding-left: 0.8rem;
 }
+
+.error-message {
+  font-size: small;
+}
+
+.error-message p {
+  line-height: 0.4rem;
+}

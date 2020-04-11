@@ -1,5 +1,6 @@
 (ns tider.app.reddit
-  (:require [tider.app.utils :refer [jsonp]])
+  (:require [tider.app.utils :refer [jsonp]]
+            [accountant.core :as accountant])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def reddit-url "http://reddit.com")
@@ -19,7 +20,7 @@
               (#(get-in % f1))
               (mapv :data)
               (cb)))
-       (fn [res] (js/console.error res)))))
+       (fn [] (accountant/navigate! "/error/")))))
 
 (defn subr
   "Loads a subrredit `s` and executes `f` (callback) at the formatted response."

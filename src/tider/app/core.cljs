@@ -17,6 +17,7 @@
 (def router
   (reitit/router
    [["/" :home]
+    ["/error/" :jsonp-error]
     ["/r"
       ["/:subreddit/" :subreddit]
       ["/:subreddit/comments/:id/:title/" :comments]]]))
@@ -126,9 +127,17 @@
                        remaining
                        " remaining)")]))])])))))
 
+(defn jsonp-error []
+  [:div.error-message
+   [:h1 "An error occured. Please disable tracking protection for this site and try again"]
+   [:p "Currently, we need tracking protection to be disabled so we can load content from reddit."]
+   [:p "It's identified as tracking by Firefox, and possibly other content blockers, because we're loading external content here, directly from your browser."]
+   [:p "This will be fixed, but, in the meantime, whitelisting/disabling protection for this site is enough."]])
+
 (defn page-for [route]
   (case route
     :home #'home
+    :jsonp-error #'jsonp-error
     :subreddit #'subreddit
     :comments #'comments))
 
@@ -144,7 +153,6 @@
         [:a.subtle-link
          {:on-click #(js/window.scrollTo 0 0)}
          "jump to top"]]])))
-
 
 (defn start []
   (render [app]
